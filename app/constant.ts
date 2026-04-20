@@ -21,7 +21,7 @@ export const BAIDU_OATUH_URL = `${BAIDU_BASE_URL}/oauth/2.0/token`;
 
 export const BYTEDANCE_BASE_URL = "https://ark.cn-beijing.volces.com";
 
-export const ALIBABA_BASE_URL = "https://dashscope.aliyuncs.com/api/";
+export const ALIBABA_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1";
 
 export const TENCENT_BASE_URL = "https://hunyuan.tencentcloudapi.com";
 
@@ -226,12 +226,7 @@ export const ByteDance = {
 
 export const Alibaba = {
   ExampleEndpoint: ALIBABA_BASE_URL,
-  ChatPath: (modelName: string) => {
-    if (modelName.includes("vl") || modelName.includes("omni")) {
-      return "v1/services/aigc/multimodal-generation/generation";
-    }
-    return `v1/services/aigc/text-generation/generation`;
-  },
+  ChatPath: "chat/completions",
 };
 
 export const Tencent = {
@@ -608,7 +603,7 @@ const bytedanceModels = [
 
 const alibabaModes = [
   "qwen-turbo",
-  "qwen-plus",
+  "qwen3.6-plus",
   "qwen-max",
   "qwen-max-0428",
   "qwen-max-0403",
