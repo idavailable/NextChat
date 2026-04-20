@@ -30,9 +30,9 @@ const DEFAULT_SYNC_STATE = {
 
   webdav: { endpoint: "", username: "", password: "" },
   upstash: {
-    endpoint: "https://clear-newt-85885.upstash.io",
+    endpoint: "https://innocent-ewe-79846.upstash.io",
     username: STORAGE_KEY,
-    apiKey: "gQAAAAAAAU99AAIncDFhYWY5MDQxMGYwM2Q0ZjExOTNhMmNlNGM2MzQ3ZjVjOXAxODU4ODU",
+    apiKey: "gQAAAAAAATfmAAIncDJjMzE5NjY5ZmFiMDg0YmQ1YmE3YThiYzYwNjVjYzQ4YnAyNzk4NDY",
   },
 
   lastSyncTime: 0,
@@ -123,8 +123,8 @@ export const useSyncStore = createPersistStore(
       const newState = persistedState as typeof DEFAULT_SYNC_STATE;
 
       // 3. 核心注入：无论版本多少，强制刷新为最新硬编码值
-      newState.upstash.apiKey = "gQAAAAAAAU99AAIncDFhYWY5MDQxMGYwM2Q0ZjExOTNhMmNlNGM2MzQ3ZjVjOXAxODU4ODU";
-      newState.upstash.endpoint = "https://clear-newt-85885.upstash.io";
+      newState.upstash.apiKey = "gQAAAAAAATfmAAIncDJjMzE5NjY5ZmFiMDg0YmQ1YmE3YThiYzYwNjVjYzQ4YnAyNzk4NDY";
+      newState.upstash.endpoint = "https://innocent-ewe-79846.upstash.io";
       newState.provider = ProviderType.UpStash;
 
       return newState as any;
