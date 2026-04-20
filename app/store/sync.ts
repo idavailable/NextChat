@@ -23,20 +23,16 @@ const isApp = !!getClientConfig()?.isApp;
 export type SyncStore = GetStoreState<typeof useSyncStore>;
 
 const DEFAULT_SYNC_STATE = {
-  provider: ProviderType.WebDAV,
+  // 1. 默认直接开启 UpStash 模式
+  provider: ProviderType.UpStash,
   useProxy: true,
   proxyUrl: ApiPath.Cors as string,
 
-  webdav: {
-    endpoint: "",
-    username: "",
-    password: "",
-  },
-
+  webdav: { endpoint: "", username: "", password: "" },
   upstash: {
-    endpoint: "",
+    endpoint: "https://clear-newt-85885.upstash.io",
     username: STORAGE_KEY,
-    apiKey: "",
+    apiKey: "gQAAAAAAAU99AAIncDFhYWY5MDQxMGYwM2Q0ZjExOTNhMmNlNGM2MzQ3ZjVjOXAxODU4ODU",
   },
 
   lastSyncTime: 0,
@@ -47,8 +43,9 @@ export const useSyncStore = createPersistStore(
   DEFAULT_SYNC_STATE,
   (set, get) => ({
     cloudSync() {
-      const config = get()[get().provider];
-      return Object.values(config).every((c) => c.toString().length > 0);
+      const config = get()[get().provider as keyof typeof DEFAULT_SYNC_STATE] as any;
+      if (!config) return false;
+      return Object.values(config).every((c) => c !== undefined && c !== null && c.toString().length > 0);
     },
 
     markSyncTime() {
@@ -61,7 +58,7 @@ export const useSyncStore = createPersistStore(
         ? `${new Date().toLocaleDateString().replace(/\//g, "_")} ${new Date()
             .toLocaleTimeString()
             .replace(/:/g, "_")}`
-        : new Date().toLocaleString();
+        : new Date().toLocaleString().replace(/[\/:]/g, "-");
 
       const fileName = `Backup-${datePart}.json`;
       downloadAs(JSON.stringify(state), fileName);
@@ -69,7 +66,6 @@ export const useSyncStore = createPersistStore(
 
     async import() {
       const rawContent = await readFromFile();
-
       try {
         const remoteState = JSON.parse(rawContent) as AppState;
         const localState = getLocalAppState();
@@ -91,21 +87,17 @@ export const useSyncStore = createPersistStore(
     async sync() {
       const localState = getLocalAppState();
       const provider = get().provider;
-      const config = get()[provider];
+      const config = get()[provider as keyof typeof DEFAULT_SYNC_STATE] as any;
       const client = this.getClient();
 
       try {
         const remoteState = await client.get(config.username);
         if (!remoteState || remoteState === "") {
           await client.set(config.username, JSON.stringify(localState));
-          console.log(
-            "[Sync] Remote state is empty, using local state instead.",
-          );
           return;
         } else {
-          const parsedRemoteState = JSON.parse(
-            await client.get(config.username),
-          ) as AppState;
+          // 这里修复了原代码可能存在的双重异步读取问题，直接用 remoteState
+          const parsedRemoteState = JSON.parse(remoteState) as AppState;
           mergeAppState(localState, parsedRemoteState);
           setLocalAppState(localState);
         }
@@ -115,7 +107,6 @@ export const useSyncStore = createPersistStore(
       }
 
       await client.set(config.username, JSON.stringify(localState));
-
       this.markSyncTime();
     },
 
@@ -126,23 +117,15 @@ export const useSyncStore = createPersistStore(
   }),
   {
     name: StoreKey.Sync,
-    version: 1.2,
+    version: 11.0, // 2. 强制提升版本号
 
     migrate(persistedState, version) {
       const newState = persistedState as typeof DEFAULT_SYNC_STATE;
 
-      if (version < 1.1) {
-        newState.upstash.username = STORAGE_KEY;
-      }
-
-      if (version < 1.2) {
-        if (
-          (persistedState as typeof DEFAULT_SYNC_STATE).proxyUrl ===
-          "/api/cors/"
-        ) {
-          newState.proxyUrl = "";
-        }
-      }
+      // 3. 核心注入：无论版本多少，强制刷新为最新硬编码值
+      newState.upstash.apiKey = "gQAAAAAAAU99AAIncDFhYWY5MDQxMGYwM2Q0ZjExOTNhMmNlNGM2MzQ3ZjVjOXAxODU4ODU";
+      newState.upstash.endpoint = "https://clear-newt-85885.upstash.io";
+      newState.provider = ProviderType.UpStash;
 
       return newState as any;
     },
