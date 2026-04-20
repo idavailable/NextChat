@@ -54,6 +54,10 @@ async function request(req: NextRequest) {
     baseUrl = baseUrl.slice(0, -1);
   }
 
+  if (!path.startsWith("/")) {
+    path = "/" + path;
+  }
+
   console.log("[Proxy] ", path);
   console.log("[Base Url]", baseUrl);
 
@@ -69,7 +73,6 @@ async function request(req: NextRequest) {
     headers: {
       "Content-Type": "application/json",
       Authorization: req.headers.get("Authorization") ?? "",
-      "X-DashScope-SSE": req.headers.get("X-DashScope-SSE") ?? "disable",
     },
     method: req.method,
     body: req.body,
