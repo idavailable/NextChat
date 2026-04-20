@@ -602,7 +602,7 @@ const bytedanceModels = [
 ];
 
 const alibabaModes = [
-  "qwen-turbo",
+  "qwen-plus",
   "qwen3.6-plus",
   "qwen-max",
   "qwen-max-0428",
