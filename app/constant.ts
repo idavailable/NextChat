@@ -590,7 +590,7 @@ const alibabaModes = [
   "deepseek-r1",
   "kimi-k2.6",
   "glm-5.1",
-  "MiniMax/MiniMax-M2.7",
+  "MiniMax-M2.7",
   "qwen-max-0428",
   "qwen-max-0403",
   "qwen-max-0107",
