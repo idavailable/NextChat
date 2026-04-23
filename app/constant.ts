@@ -604,6 +604,7 @@ const bytedanceModels = [
 const alibabaModes = [
   "qwen3.6-plus",
   "qwen-max",
+  "deepseek-r1",
   "qwen-max-0428",
   "qwen-max-0403",
   "qwen-max-0107",
