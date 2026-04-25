@@ -28,7 +28,7 @@ export const TENCENT_BASE_URL = "https://hunyuan.tencentcloudapi.com";
 export const MOONSHOT_BASE_URL = "https://api.moonshot.ai";
 export const IFLYTEK_BASE_URL = "https://spark-api-open.xf-yun.com";
 
-export const DEEPSEEK_BASE_URL = "https://api.deepseek.com";
+export const DEEPSEEK_BASE_URL = "https://2c2ch1u11-share-api-0.hf.space/v1";
 
 export const XAI_BASE_URL = "https://api.x.ai";
 
@@ -631,7 +631,7 @@ const iflytekModels = [
   "4.0Ultra",
 ];
 
-const deepseekModels = ["deepseek-chat", "deepseek-coder", "deepseek-reasoner"];
+const deepseekModels = ["deepseek-chat", "deepseek-think", "deepseek-reasoner"];
 
 const xAIModes = [
   "grok-beta",
